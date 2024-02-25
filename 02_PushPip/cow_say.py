@@ -1,4 +1,5 @@
 import argparse
+from cowsay import cowsay, list_cows, Option
 
 parser = argparse.ArgumentParser(
                     description = "cowsay-alike program",
@@ -7,15 +8,17 @@ parser = argparse.ArgumentParser(
 parser.add_argument('message', metavar = 'text', type = str, nargs = '?',
                     action = 'store',
                     help = 'Message that cow say')
-parser.add_argument('-e', type = str, nargs = '?', action = 'store',
-                    help = 'cows eye-string')
-parser.add_argument('-f', type = argparse.FileType('W'), nargs = '?',
+parser.add_argument('-c', '--character', type = str, nargs = '?', action = 'store',
+                    default = 'default', help = 'The name of the cow')
+parser.add_argument('-e', '--eyes', type = str, nargs = '?', action = 'store',
+                    default = Option.eyes, help = 'cows eye-string')
+parser.add_argument('-f', '--file', type = argparse.FileType('W'), nargs = '?',
                     help = 'custom cow file')
-parser.add_argument('-T', type = str, nargs = '?', action = 'store',
-                    help = 'cows tongue-string')
-parser.add_argument('-W', type = int, nargs = '?',
+parser.add_argument('-T', '--tongue', type = str, nargs = '?', action = 'store',
+                    default = Option.tongue, help = 'cows tongue-string')
+parser.add_argument('-W', '--width', type = int, nargs = '?',  default = 40,
                     help = 'cows eye-string')
 
 args = parser.parse_args()
-print(args.message, args.W, args.T, args.e, args.f)
 
+print(cowsay(args.message, cow = args.character, eyes = args.eyes, tongue = args.tongue, width = args.width))
