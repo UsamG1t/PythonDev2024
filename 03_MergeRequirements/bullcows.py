@@ -1,5 +1,5 @@
 import random
-import os
+import sys
 
 def ask(prompt: str, valid: list[str] = None) -> str:
     while True:
@@ -32,6 +32,7 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
         try_count += 1
 
     return try_count
+
 
 with open("eng_words.txt", 'r') as f:
     words = f.read().split('\n')    
