@@ -1,15 +1,16 @@
 import random
+import cowsay
 import sys
 
 def ask(prompt: str, valid: list[str] = None) -> str:
     while True:
-        word = input(prompt)
+        word = input(cowsay.cowsay(prompt, cow = cowsay.get_random_cow()))
         if not valid or word in valid:
             break
     return word
 
 def inform(format_string: str, bulls: int, cows: int) -> None:
-    print(format_string.format(bulls, cows))
+    print(cowsay.cowsay(format_string.format(bulls, cows), cow = cowsay.get_random_cow()))
 
 def bullcows(guess: str, secret: str) -> (int, int):
     bulls = cows = 0
