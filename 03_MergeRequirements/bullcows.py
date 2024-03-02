@@ -21,8 +21,10 @@ def bullcows(guess: str, secret: str) -> (int, int):
     return (bulls, cows)
 
 def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
-    secret = random.choice(words)
-    guess = None
+    secret = guess = ""
+    length = 5 if len(sys.argv) == 2 else int(sys.argv[2])
+    while len(secret) != length:
+        secret = random.choice(words)
     try_count = 0
 
     while guess != secret:
@@ -34,6 +36,6 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
     return try_count
 
 
-with open("eng_words.txt", 'r') as f:
+with open(sys.argv[1], 'r') as f:
     words = f.read().split('\n')    
 print(gameplay(ask, inform, words))
