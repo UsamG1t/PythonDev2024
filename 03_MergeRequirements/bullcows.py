@@ -1,10 +1,29 @@
 import random
 import cowsay
 import sys
+import io
+
+MyCow = cowsay.read_dot_cow(io.StringIO("""
+$the_cow = <<EOC;
+         $thoughts
+          $thoughts
+           ______
+          (/\\  /\\)
+          (\\/  \\/)
+          (  **  )
+          ( WWWW )
+          ( MMMM )
+           ------
+
+.
+EOC
+"""))
+
 
 def ask(prompt: str, valid: list[str] = None) -> str:
     while True:
-        word = input(cowsay.cowsay(prompt, cow = cowsay.get_random_cow()))
+        word = input(cowsay.cowsay(prompt, cowfile = MyCow))
+        # word = input(cowsay.cowsay(prompt, cow = cowsay.get_random_cow()))
         if not valid or word in valid:
             break
     return word
