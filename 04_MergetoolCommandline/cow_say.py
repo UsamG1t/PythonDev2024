@@ -55,8 +55,6 @@ class CMDL(cmd.Cmd):
                 key = rev_arg
                 break
 
-        print(f">>{words} - {text}<<")
-
         match key:
             case '-c'|'--character':
                 DICT = cowsay.list_cows()
