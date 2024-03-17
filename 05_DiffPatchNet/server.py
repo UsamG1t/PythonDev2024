@@ -23,15 +23,24 @@ async def handler(reader, writer):
                 print(args)
                 match args:
                     case ['who']:
-                        writer.write(f'{users.keys()}\n'.encode())
+                        response = "\n".join(users.keys()) + "\n\n" if users.keys() else "No one "
+                        response += "is online now"
+                        writer.write(f'{response}\n'.encode())
+                    
                     case ['cows']:
-                        writer.write(f'{set(cowsay.list_cows()) - set(users.keys())}\n'.encode())
+                        response = ' '.join(sorted(set(cowsay.list_cows()) - set(users.keys())))
+                        response = "available accounts:\n\n" + response
+                        writer.write(f'{response}\n'.encode())
+                    
                     case ['login', cow_name]:
                         if cow_name in users.keys():
                             writer.write('LoginError: Exists user with this id\n'.encode())
                             break
                         my_id = cow_name
                         users[my_id] = my_queue
+                        print(f"{client} logs in as {my_id}\n")
+                        client = my_id
+                    
                     case ['say', rcv_name, msg]:
                         if not my_id:
                             writer.write('NoAccessError: You are non-authorized client, please log in\n'.encode())
@@ -41,6 +50,7 @@ async def handler(reader, writer):
                             break
 
                         await users[rcv_name].put(f'{cowsay.cowsay(msg, cow=my_id)}')                    
+                    
                     case ['yield', msg]:
                         if not my_id:
                             writer.write('NoAccessError: You are non-authorized client, please log in\n'.encode())
@@ -49,13 +59,21 @@ async def handler(reader, writer):
                         for user in users.values():
                             if user is not my_queue:
                                 await user.put(f'{cowsay.cowsay(msg, cow=my_id)}')                    
+                    
                     case ['quit']:
                         if not my_id:
                             writer.write('NoAccessError: You are non-authorized client, please log in\n'.encode())
                             break
-                        
+
+                        client = writer.get_extra_info("peername")
+                        print(f"{client} logs out from {my_id}\n")
                         del users[my_id]
                         my_id = None
+                    
+                    case _:
+                        continue
+                    
+
             if request is receive:
                 receive = asyncio.create_task(my_queue.get())
                 writer.write(f"{request.result()}\n".encode())
